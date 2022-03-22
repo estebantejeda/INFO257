@@ -9,7 +9,7 @@ class Particle{
   float velocityY;
   
   Particle(){
-    x = random (width); 
+    x = random(width); 
     y = random(height);
     fitness = -1;
     performanceX = -1;
@@ -19,13 +19,12 @@ class Particle{
     velocityY = random(-1,1);
   }
 
-  float evaluate(){
+  void evaluate(){
     evals++;
     color surfaceColor = getSurfaceColor();
     fitness = getColorValue(surfaceColor);
     if (isFitnessBetter(performanceFitness)) updatePerformance();
     if (isFitnessBetter(globalBest)) updateGlobalBest();
-    return fitness;
   }
 
   private color getSurfaceColor(){

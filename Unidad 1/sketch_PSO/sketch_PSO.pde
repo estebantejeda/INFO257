@@ -1,5 +1,4 @@
 PImage surface;
-
 Particle[] particles;
 float globalBestX, globalBestY, globalBest;
 int evals = 0, evals_to_best = 0;
@@ -34,13 +33,6 @@ void drawParticles(){
   for (int i = 0; i < config.POINTS; i++) particles[i].draw();
 }
 
-void updateParticles(){
-  for (int i = 0; i < config.POINTS; i++){
-    particles[i].move();
-    particles[i].evaluate();
-  }
-}
-
 void showBestInSurface(){
   fill(#0000ff);
   circle(globalBestX,globalBestY,config.DISPLAY_RADIUS);
@@ -48,4 +40,11 @@ void showBestInSurface(){
   textFont(font,15);
   fill(#00ff00);
   text("Best fitness: "+str(globalBest)+"\nEvals to best: "+str(evals_to_best)+"\nEvals: "+str(evals),10,20);
+}
+
+void updateParticles(){
+  for (int i = 0; i < config.POINTS; i++){
+    particles[i].move();
+    particles[i].evaluate();
+  }
 }
