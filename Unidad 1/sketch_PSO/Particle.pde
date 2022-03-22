@@ -1,68 +1,123 @@
 class Particle{
-  float x, y, fit; // current position(x-vector)  and fitness (x-fitness)
-  float px, py, pfit; // position (p-vector) and fitness (p-fitness) of best solution found by particle so far
-  float vx, vy; //vector de avance (v-vector)
-  Config config = new Config();
+  float x;
+  float y;
+  float fitness;
+  float performanceX;
+  float performanceY;
+  float performanceFitness;
+  float velocityX;
+  float velocityY;
   
-  // ---------------------------- Constructor
   Particle(){
-    x = random (width); y = random(height);
-    vx = random(-1,1) ; vy = random(-1,1);
-    pfit = -1; fit = -1; //asumiendo que no hay valores menores a -1 en la función de evaluación
+    x = random (width); 
+    y = random(height);
+    fitness = -1;
+    performanceX = -1;
+    performanceY = -1;
+    performanceFitness = -1;
+    velocityX = random(-1,1);
+    velocityY = random(-1,1);
   }
-  
-  // ---------------------------- Evalúa partícula
-  float Eval(PImage surf){ //recibe imagen que define función de fitness
+
+  float evaluate(){
     evals++;
-    color c=surf.get(int(x),int(y)); // obtiene color de la imagen en posición (x,y)
-    fit = red(c); //evalúa por el valor de la componente roja de la imagen
-    if(fit > pfit){ // actualiza local best si es mejor
-      pfit = fit;
-      px = x;
-      py = y;
-    }
-    if (fit > gbest){ // actualiza global best
-      gbest = fit;
-      gbestx = x;
-      gbesty = y;
-      evals_to_best = evals;
-      println(str(gbest));
-    };
-    return fit; //retorna la componente roja
+    color surfaceColor = getSurfaceColor();
+    fitness = getColorValue(surfaceColor);
+    if (isFitnessBetter(performanceFitness)) updatePerformance();
+    if (isFitnessBetter(globalBest)) updateGlobalBest();
+    return fitness;
+  }
+
+  private color getSurfaceColor(){
+    int intX = int(x);
+    int intY = int(y);
+    return surface.get(intX, intY);
+  }
+
+  private float getColorValue(color surfaceColor){
+    return red(surfaceColor);
+  }
+
+  private boolean isFitnessBetter(float compare){
+    return fitness > compare;
+  }
+
+  private void updatePerformance(){
+    performanceFitness = fitness;
+    performanceX = x;
+    performanceY = y;
+  }
+
+  private void updateGlobalBest(){
+    globalBest = fitness;
+    globalBestX = x;
+    globalBestY = y;
+    evals_to_best = evals;
+    println(str(globalBest));
   }
   
-  // ------------------------------ mueve la partícula
-  void move(){
-    //actualiza velocidad (fórmula con factores de aprendizaje C1 y C2)
-    //vx = vx + random(0,1)*config.C1*(px - x) + random(0,1)*config.C2*(gbestx - x);
-    //vy = vy + random(0,1)*config.C1*(py - y) + random(0,1)*config.C2*(gbesty - y);
-    //actualiza velocidad (fórmula con inercia, p.250)
-    vx = config.w * vx + random(0,1)*(px - x) + random(0,1)*(gbestx - x);
-    vy = config.w * vy + random(0,1)*(py - y) + random(0,1)*(gbesty - y);
-    //actualiza velocidad (fórmula mezclada)
-    //vx = config.w * vx + random(0,1)*config.C1*(px - x) + random(0,1)*config.C2*(gbestx - x);
-    //vy = config.w * vy + random(0,1)*config.C1*(py - y) + random(0,1)*config.C2*(gbesty - y);
-    // trunca velocidad a maxv
-    float modu = sqrt(vx*vx + vy*vy);
-    if (modu > config.MAX_VELOCITY){
-      vx = vx/modu*config.MAX_VELOCITY;
-      vy = vy/modu*config.MAX_VELOCITY;
-    }
-    // update position
-    x = x + vx;
-    y = y + vy;
-    // rebota en murallas
-    if (x > width || x < 0) vx = - vx;
-    if (y > height || y < 0) vy = - vy;
+  void move(){    
+    selectVelocityType();
+
+    float velocity = calculateModule();
+    checkVelocityLimit(velocity);
+
+    updatePosition();
+    checkWalls();
   }
-  
-  // ------------------------------ despliega partícula
-  void display(){
-    color c=surf.get(int(x),int(y)); 
-    fill(c);
-    ellipse (x,y,config.DISPLAY_RADIUS,config.DISPLAY_RADIUS);
-    // dibuja vector
+
+  private void selectVelocityType(){
+    switch(config.VELOCITY_TYPE){
+      case 0:
+        //actualiza velocidad (fórmula con factores de aprendizaje C1 y C2)
+        velocityX = velocityX + random(0,1)*config.C1*(performanceX - x) + random(0,1)*config.C2*(globalBestX - x);
+        velocityY = velocityY + random(0,1)*config.C1*(performanceY - y) + random(0,1)*config.C2*(globalBestY - y);
+      case 1:
+        //actualiza velocidad (fórmula con inercia, p.250)
+        velocityX = config.w * velocityX + random(0,1)*(performanceX - x) + random(0,1)*(globalBestX - x);
+        velocityY = config.w * velocityY + random(0,1)*(performanceY - y) + random(0,1)*(globalBestY - y);
+      case 2:
+        //actualiza velocidad (fórmula mezclada)
+        velocityX = config.w * velocityX + random(0,1)*config.C1*(performanceX - x) + random(0,1)*config.C2*(globalBestX - x);
+        velocityY = config.w * velocityY + random(0,1)*config.C1*(performanceY - y) + random(0,1)*config.C2*(globalBestY - y);
+    }
+  }
+
+  private float calculateModule(){
+    return sqrt(velocityX*velocityX + velocityY*velocityY);
+  }
+
+  private void checkVelocityLimit(float velocity){
+    if (velocity > config.MAX_VELOCITY){
+      velocityX = velocityX/velocity*config.MAX_VELOCITY;
+      velocityY = velocityY/velocity*config.MAX_VELOCITY;
+    }
+  }
+
+  private void updatePosition(){
+    x = x + velocityX;
+    y = y + velocityY;
+  }
+
+  private void checkWalls(){
+    checkWidthWall();
+    checkHeightWall();
+  }
+
+  private void checkWidthWall(){
+    if (x > width || x < 0) velocityX = -velocityX;
+  }
+
+  private void checkHeightWall(){
+    if (y > height || y < 0) velocityY = -velocityY;
+  }
+
+  void draw(){
+    color surfaceColor = getSurfaceColor();
+    fill(surfaceColor);
+    circle(x,y,config.DISPLAY_RADIUS);
     stroke(#ff0000);
-    line(x,y,x-10*vx,y-10*vy);
+    line(x,y,x-10*velocityX,y-10*velocityY);
   }
+
 }

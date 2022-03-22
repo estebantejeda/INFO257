@@ -6,6 +6,7 @@ class Config {
     float C2;
     float MAX_VELOCITY;
     String IMG_PATH;
+    int VELOCITY_TYPE;
 
     Config(){
         POINTS = 100;
@@ -15,5 +16,8 @@ class Config {
         C2 = 10;
         MAX_VELOCITY = 3;
         IMG_PATH = "Moon_LRO_LOLA_global_LDEM_1024_b.jpg"; // marscyl2.jpg
+        VELOCITY_TYPE = 1;
     }
 }
+
+// Te amo
