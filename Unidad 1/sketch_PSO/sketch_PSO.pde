@@ -6,7 +6,7 @@ int evals = 0, evals_to_best = 0;
 Config config = new Config();
 
 void setup(){  
-  size(1024,512); //size(1440,720)
+  size(913,913);
   surface = loadImage(config.IMG_PATH);
   smooth();
   

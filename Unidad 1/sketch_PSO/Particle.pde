@@ -9,22 +9,35 @@ class Particle{
   float velocityY;
   
   Particle(){
-    x = random(width); 
-    y = random(height);
+    x = initializePosition(); 
+    y = initializePosition();
     fitness = -1;
     performanceX = -1;
     performanceY = -1;
     performanceFitness = -1;
-    velocityX = random(-1,1);
-    velocityY = random(-1,1);
+    velocityX = random(-1, 1);
+    velocityY = random(-1, 1);
+  }
+
+  private float initializePosition(){
+    return random(config.DOMAIN_MIN, config.DOMAIN_MAX);
   }
 
   void evaluate(){
     evals++;
-    color surfaceColor = getSurfaceColor();
-    fitness = getColorValue(surfaceColor);
+    fitness = rastringinFunction(x, y);
     if (isFitnessBetter(performanceFitness)) updatePerformance();
     if (isFitnessBetter(globalBest)) updateGlobalBest();
+  }
+
+  private float rastringinFunction(float x, float y){
+    float componentX = delta(x);
+    float componentY = delta(y);
+    return 10*2 + componentX + componentY;
+  }
+
+  private float delta(float component){
+    return pow(component, 2) - 10*cos(2*PI*component);
   }
 
   private color getSurfaceColor(){
@@ -33,12 +46,8 @@ class Particle{
     return surface.get(intX, intY);
   }
 
-  private float getColorValue(color surfaceColor){
-    return red(surfaceColor);
-  }
-
   private boolean isFitnessBetter(float compare){
-    return fitness > compare;
+    return fitness < compare;
   }
 
   private void updatePerformance(){

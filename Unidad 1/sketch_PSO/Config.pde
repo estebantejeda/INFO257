@@ -7,6 +7,8 @@ class Config {
     float MAX_VELOCITY;
     String IMG_PATH;
     int VELOCITY_TYPE;
+    float DOMAIN_MIN;
+    float DOMAIN_MAX;
 
     Config(){
         POINTS = 100;
@@ -15,8 +17,10 @@ class Config {
         C1 = 30; // learning factors (C1: own, C2: social) (ok)
         C2 = 10;
         MAX_VELOCITY = 3;
-        IMG_PATH = "./img/Moon_LRO_LOLA_global_LDEM_1024_b.jpg"; // marscyl2.jpg
+        IMG_PATH = "./img/Rastrigin_Surface.png";
         VELOCITY_TYPE = 1;
+        DOMAIN_MIN = -5.12;
+        DOMAIN_MAX = 5.12;
     }
 }
 
