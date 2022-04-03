@@ -19,7 +19,7 @@ class Environment {
         C2 = 10; // learning factors (C2: social)
         MAX_VELOCITY = 3;
         IMG_PATH = "./img/Rastrigin_Surface.png";
-        VELOCITY_TYPE = 2;
+        VELOCITY_TYPE = 0;
         DOMAIN_MIN = -5.12;
         DOMAIN_MAX = 5.12;
         CENTER = 457; // constante que centra las partículas en la imagen
