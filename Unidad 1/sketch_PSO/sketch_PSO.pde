@@ -1,7 +1,10 @@
 PImage surface;
 Particle[] particles; 
-float globalBestX = 99999, globalBestY = 99999, globalBest = 99999; 
-int evals = 0, evals_to_best = 0;
+float globalBestX = 99999;
+float globalBestY = 99999;
+float globalBest = 99999; 
+int evals = 0;
+int evals_to_best = 0;
 Environment environment = new Environment();
 
 void setup(){  
