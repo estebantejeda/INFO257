@@ -20,7 +20,7 @@ class Particle{
   }
   
   private float initializePosition(){
-    return random(environment.DOMAIN_MIN,environment.DOMAIN_MAX);
+    return random(-913,913);
   }
   
   void evaluate(){
