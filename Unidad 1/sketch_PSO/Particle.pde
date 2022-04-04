@@ -91,17 +91,10 @@ class Particle{
   }
   
   void display(){
-    color surfaceColor = getSurfaceColor();
-    fill(surfaceColor);
+    fill(#ff0000);
     circle(x + environment.CENTER, y + environment.CENTER, environment.DISPLAY_RADIUS);
     stroke(#ff0000);
     line(x + environment.CENTER,y + environment.CENTER,(x + environment.CENTER) - 10*velocityX,(y + environment.CENTER) - 10*velocityY);
-  }
-
-  private color getSurfaceColor(){
-    int intX = int(x);
-    int intY = int(y);
-    return surface.get(intX, intY);
   }
 
 } 
