@@ -1,11 +1,11 @@
+Environment environment = new Environment();
 PImage surface;
 Particle[] particles; 
-float globalBestX = 99999;
-float globalBestY = 99999;
-float globalBest = 99999; 
+float globalBestX = environment.INITIAL_GLOBAL;
+float globalBestY = environment.INITIAL_GLOBAL;
+float globalBest = environment.INITIAL_GLOBAL; 
 int evals = 0;
 int evals_to_best = 0;
-Environment environment = new Environment();
 
 void setup(){  
   size(913,913);

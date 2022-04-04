@@ -9,6 +9,7 @@ class Environment {
     int VELOCITY_TYPE;
     float DOMAIN_MIN;
     float DOMAIN_MAX;
+    float INITIAL_GLOBAL;
     int CENTER;
 
     Environment(){
@@ -22,6 +23,7 @@ class Environment {
         VELOCITY_TYPE = 0;
         DOMAIN_MIN = -5.12;
         DOMAIN_MAX = 5.12;
+        INITIAL_GLOBAL = 99999;
         CENTER = 457; // constante que centra las partículas en la imagen
     }
 }
